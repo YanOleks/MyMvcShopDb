@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Data;
+using MyMvcShopDb.Core.Interfaces;
+using MyMvcShopDb.Infrastructure.Data;
+using MyMvcShopDb.Infrastructure.Repositories;
 
 namespace MyMvcShopDb
 {
@@ -13,8 +15,13 @@ namespace MyMvcShopDb
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddEndpointsApiExplorer();
 
             var app = builder.Build();
 

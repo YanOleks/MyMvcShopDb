@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MyMvcShopDb.Models;
+using MyMvcShopDb.Core.Models;
 
 namespace MyMvcShopDb.Controllers
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyMvcShopDb.Models
+namespace MyMvcShopDb.Core.Models
 {
     public class Product
     {

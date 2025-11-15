@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyMvcShopDb.Data;
+using MyMvcShopDb.Infrastructure.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -24,7 +24,7 @@ namespace MyMvcShopDb.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Category", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace MyMvcShopDb.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Manufacturer", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Manufacturer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace MyMvcShopDb.Migrations
                     b.ToTable("Manufacturers");
                 });
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Product", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,15 +100,15 @@ namespace MyMvcShopDb.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Product", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Product", b =>
                 {
-                    b.HasOne("MyMvcShopDb.Models.Category", "Category")
+                    b.HasOne("MyMvcShopDb.Core.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyMvcShopDb.Models.Manufacturer", "Manufacturer")
+                    b.HasOne("MyMvcShopDb.Core.Models.Manufacturer", "Manufacturer")
                         .WithMany("Products")
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -119,12 +119,12 @@ namespace MyMvcShopDb.Migrations
                     b.Navigation("Manufacturer");
                 });
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Category", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("MyMvcShopDb.Models.Manufacturer", b =>
+            modelBuilder.Entity("MyMvcShopDb.Core.Models.Manufacturer", b =>
                 {
                     b.Navigation("Products");
                 });

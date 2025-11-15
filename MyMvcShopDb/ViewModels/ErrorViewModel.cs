@@ -1,4 +1,4 @@
-namespace MyMvcShopDb.Models
+namespace MyMvcShopDb.Core.Models
 {
     public class ErrorViewModel
     {

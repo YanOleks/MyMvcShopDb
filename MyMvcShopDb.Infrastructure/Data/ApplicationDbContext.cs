@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Models;
+using MyMvcShopDb.Core.Models;
 
-namespace MyMvcShopDb.Data
+namespace MyMvcShopDb.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Data;
-using MyMvcShopDb.Models;
+using MyMvcShopDb.Infrastructure.Data;
+using MyMvcShopDb.Core.Models;
 using MyMvcShopDb.ViewModels;
 
 namespace MyMvcShopDb.Controllers

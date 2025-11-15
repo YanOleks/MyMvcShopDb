@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Data;
-using MyMvcShopDb.Models;
-using MyMvcShopDb.ViewModels; // Додано
+using MyMvcShopDb.Infrastructure.Data;
+using MyMvcShopDb.Core.Models;
+using MyMvcShopDb.ViewModels;
 
 namespace MyMvcShopDb.Controllers
 {
@@ -19,7 +19,6 @@ namespace MyMvcShopDb.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            // Використовуємо ProductIndexViewModel
             var productsList = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Manufacturer)

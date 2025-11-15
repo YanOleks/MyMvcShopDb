@@ -4,24 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Core.Models;
 using MyMvcShopDb.ViewModels;
-using MyMvcShopDb.Services; // <-- 1. ДОДАНО USING ДЛЯ СЕРВІСУ
+using MyMvcShopDb.Services;
 
 namespace MyMvcShopDb.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IPhotoService _photoService; // <-- 2. ДОДАНО ПОЛЕ ДЛЯ СЕРВІСУ
+        private readonly IPhotoService _photoService;
 
-        // 3. ДОДАНО IPhotoService В КОНСТРУКТОР
         public ProductsController(ApplicationDbContext context, IPhotoService photoService)
         {
             _context = context;
-            _photoService = photoService; // <-- 4. ІНІЦІАЛІЗОВАНО СЕРВІС
+            _photoService = photoService;
         }
 
-        // GET: Products
-        // ... (Без змін) ...
         public async Task<IActionResult> Index()
         {
             var productsList = _context.Products
@@ -41,7 +38,6 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Details/5
-        // ... (Без змін) ...
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -62,7 +58,6 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Create
-        // ... (Без змін) ...
         public async Task<IActionResult> Create()
         {
             var viewModel = new ProductViewModel
@@ -90,20 +85,17 @@ namespace MyMvcShopDb.Controllers
         {
             if (ModelState.IsValid)
             {
-                // <-- 5. ЛОГІКА ЗАВАНТАЖЕННЯ ФАЙЛУ
                 string imageUrl = null;
                 if (viewModel.ImageFile != null)
                 {
-                    // Викликаємо сервіс для завантаження
                     imageUrl = await _photoService.AddPhotoAsync(viewModel.ImageFile);
                 }
 
-                // Мапимо ViewModel на Model
                 var product = new Product
                 {
                     Name = viewModel.Name,
                     Price = viewModel.Price,
-                    ImageUrl = imageUrl, // <-- 6. ПРИЗНАЧАЄМО URL З CLOUDINARY
+                    ImageUrl = imageUrl,
                     CategoryId = viewModel.CategoryId,
                     ManufacturerId = viewModel.ManufacturerId
                 };
@@ -113,7 +105,6 @@ namespace MyMvcShopDb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // ... (Без змін) ...
             viewModel.CategoryList = await _context.Categories.Select(c => new SelectListItem
             {
                 Text = c.Name,
@@ -129,7 +120,6 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Edit/5
-        // ... (Без змін) ...
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

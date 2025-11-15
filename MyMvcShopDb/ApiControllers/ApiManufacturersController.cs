@@ -4,13 +4,13 @@ using MyMvcShopDb.Core.Interfaces;
 
 namespace MyMvcShopDb.Controllers.Api
 {
-    [Route("api/[controller]")] // Шлях: /api/manufacturers
+    [Route("api/[controller]")]
     [ApiController]
-    public class ManufacturersController : ControllerBase
+    public class ApiManufacturersController : ControllerBase
     {
         private readonly IManufacturerRepository _repository;
 
-        public ManufacturersController(IManufacturerRepository repository)
+        public ApiManufacturersController(IManufacturerRepository repository)
         {
             _repository = repository;
         }

@@ -6,11 +6,11 @@ namespace MyMvcShopDb.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ApiProductsController : ControllerBase
     {
         private readonly IProductRepository _repository;
 
-        public ProductsController(IProductRepository repository)
+        public ApiProductsController(IProductRepository repository)
         {
             _repository = repository;
         }

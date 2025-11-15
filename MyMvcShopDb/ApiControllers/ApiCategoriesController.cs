@@ -6,11 +6,11 @@ namespace MyMvcShopDb.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class ApiCategoriesController : ControllerBase
     {
         private readonly ICategoryRepository _repository;
 
-        public CategoriesController(ICategoryRepository repository)
+        public ApiCategoriesController(ICategoryRepository repository)
         {
             _repository = repository;
         }

@@ -7,7 +7,7 @@
         <div class="col-md-10">
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
-                <img asp-src="@Model.ImageUrl" class="d-block w-100 rounded" alt="Product image" />
+                <img asp-src="@Model.ImageUrl" class="d-block w-100 rounded" alt="@Model.Name - main photo from @Model.Manufacturer!.Name" />
             }
         </div>
     </div>

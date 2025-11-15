@@ -1,0 +1,17 @@
+﻿@using MyMvcShopDb.Core.Models
+@model Product
+
+<header id="overview" class="container text-center my-5 pt-4">
+    <h1>@Model.Name</h1>
+    <p class="lead">Available now from @Model.Manufacturer!.Name</p>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" class="img-fluid rounded shadow-lg" alt="@Model.Name" />
+    }
+    else
+    {
+        <img src="~/images/placeholder.png" class="img-fluid rounded shadow-lg" alt="No image available" />
+    }
+</header>
+<hr />

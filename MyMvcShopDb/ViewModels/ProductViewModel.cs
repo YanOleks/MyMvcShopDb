@@ -20,6 +20,8 @@ namespace MyMvcShopDb.ViewModels
         [Display(Name = "Image URL")]
         public string? ImageUrl { get; set; }
 
+        public IFormFile? ImageFile { get; set; }
+
         [Required(ErrorMessage = "Please select a category")]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MyMvcShopDb.Core.Interfaces;
+using MyMvcShopDb.Helpers;
 using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Infrastructure.Repositories;
+using MyMvcShopDb.Services;
 
 namespace MyMvcShopDb
 {
@@ -18,6 +20,8 @@ namespace MyMvcShopDb
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

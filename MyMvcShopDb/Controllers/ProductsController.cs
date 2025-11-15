@@ -4,19 +4,24 @@ using Microsoft.EntityFrameworkCore;
 using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Core.Models;
 using MyMvcShopDb.ViewModels;
+using MyMvcShopDb.Services; // <-- 1. ДОДАНО USING ДЛЯ СЕРВІСУ
 
 namespace MyMvcShopDb.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPhotoService _photoService; // <-- 2. ДОДАНО ПОЛЕ ДЛЯ СЕРВІСУ
 
-        public ProductsController(ApplicationDbContext context)
+        // 3. ДОДАНО IPhotoService В КОНСТРУКТОР
+        public ProductsController(ApplicationDbContext context, IPhotoService photoService)
         {
             _context = context;
+            _photoService = photoService; // <-- 4. ІНІЦІАЛІЗОВАНО СЕРВІС
         }
 
         // GET: Products
+        // ... (Без змін) ...
         public async Task<IActionResult> Index()
         {
             var productsList = _context.Products
@@ -36,6 +41,7 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Details/5
+        // ... (Без змін) ...
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -56,14 +62,12 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Create
+        // ... (Без змін) ...
         public async Task<IActionResult> Create()
         {
             var viewModel = new ProductViewModel
             {
-                Name = string.Empty, // <--- FIX 2
-                                     // Price, CategoryId, ManufacturerId - це value types (decimal/int), 
-                                     // вони ініціалізуються як 0, тому з ними все гаразд.
-
+                Name = string.Empty,
                 CategoryList = await _context.Categories.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -78,6 +82,7 @@ namespace MyMvcShopDb.Controllers
 
             return View(viewModel);
         }
+
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,12 +90,20 @@ namespace MyMvcShopDb.Controllers
         {
             if (ModelState.IsValid)
             {
+                // <-- 5. ЛОГІКА ЗАВАНТАЖЕННЯ ФАЙЛУ
+                string imageUrl = null;
+                if (viewModel.ImageFile != null)
+                {
+                    // Викликаємо сервіс для завантаження
+                    imageUrl = await _photoService.AddPhotoAsync(viewModel.ImageFile);
+                }
+
                 // Мапимо ViewModel на Model
                 var product = new Product
                 {
                     Name = viewModel.Name,
                     Price = viewModel.Price,
-                    ImageUrl = viewModel.ImageUrl,
+                    ImageUrl = imageUrl, // <-- 6. ПРИЗНАЧАЄМО URL З CLOUDINARY
                     CategoryId = viewModel.CategoryId,
                     ManufacturerId = viewModel.ManufacturerId
                 };
@@ -100,7 +113,7 @@ namespace MyMvcShopDb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Якщо ModelState не валідний, ТРЕБА ПОВТОРНО заповнити списки
+            // ... (Без змін) ...
             viewModel.CategoryList = await _context.Categories.Select(c => new SelectListItem
             {
                 Text = c.Name,
@@ -116,6 +129,7 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Edit/5
+        // ... (Без змін) ...
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -129,16 +143,14 @@ namespace MyMvcShopDb.Controllers
                 return NotFound();
             }
 
-            // Мапимо Model на ViewModel
             var viewModel = new ProductViewModel
             {
                 Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
-                ImageUrl = product.ImageUrl,
+                ImageUrl = product.ImageUrl, // <-- Передаємо існуючий URL у View
                 CategoryId = product.CategoryId,
                 ManufacturerId = product.ManufacturerId,
-                // Заповнюємо списки
                 CategoryList = await _context.Categories.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -168,16 +180,29 @@ namespace MyMvcShopDb.Controllers
             {
                 try
                 {
-                    // Мапимо ViewModel на Model
-                    var product = new Product
+                    // <-- 7. ПОКРАЩЕНА ЛОГІКА ОНОВЛЕННЯ
+                    // Знаходимо існуючий продукт, щоб не втратити дані
+                    var product = await _context.Products.FindAsync(viewModel.Id);
+                    if (product == null)
                     {
-                        Id = viewModel.Id,
-                        Name = viewModel.Name,
-                        Price = viewModel.Price,
-                        ImageUrl = viewModel.ImageUrl,
-                        CategoryId = viewModel.CategoryId,
-                        ManufacturerId = viewModel.ManufacturerId
-                    };
+                        return NotFound();
+                    }
+
+                    // Оновлюємо властивості
+                    product.Name = viewModel.Name;
+                    product.Price = viewModel.Price;
+                    product.CategoryId = viewModel.CategoryId;
+                    product.ManufacturerId = viewModel.ManufacturerId;
+
+                    // Перевіряємо, чи користувач завантажив НОВИЙ файл
+                    if (viewModel.ImageFile != null)
+                    {
+                        // Якщо так, завантажуємо новий
+                        string newImageUrl = await _photoService.AddPhotoAsync(viewModel.ImageFile);
+                        product.ImageUrl = newImageUrl; // і оновлюємо URL
+                    }
+                    // Якщо viewModel.ImageFile == null,
+                    // то product.ImageUrl просто залишається таким, яким був у базі.
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();
@@ -196,7 +221,7 @@ namespace MyMvcShopDb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Якщо ModelState не валідний, ТРЕБА ПОВТОРНО заповнити списки
+            // ... (Без змін) ...
             viewModel.CategoryList = await _context.Categories.Select(c => new SelectListItem
             {
                 Text = c.Name,
@@ -212,6 +237,7 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Delete/5
+        // ... (Без змін) ...
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -232,6 +258,7 @@ namespace MyMvcShopDb.Controllers
         }
 
         // POST: Products/Delete/5
+        // ... (Без змін) ...
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -239,6 +266,9 @@ namespace MyMvcShopDb.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
+                // TODO: По-хорошому, тут треба додати логіку видалення
+                // старого фото з Cloudinary, але це вимагає 
+                // окремого методу в IPhotoService
                 _context.Products.Remove(product);
             }
 

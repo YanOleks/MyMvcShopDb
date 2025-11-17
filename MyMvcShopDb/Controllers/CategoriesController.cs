@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Core.Models;
+using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.ViewModels;
 
 namespace MyMvcShopDb.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,12 +18,14 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Categories
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
         }
 
         // GET: Categories/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,7 +46,6 @@ namespace MyMvcShopDb.Controllers
         // GET: Categories/Create
         public IActionResult Create()
         {
-            // Просто повертаємо View для нової ViewModel
             return View();
         }
 

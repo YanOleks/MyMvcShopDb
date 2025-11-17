@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Core.Models;
-using MyMvcShopDb.ViewModels;
+using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Services;
+using MyMvcShopDb.ViewModels;
 
 namespace MyMvcShopDb.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,6 +21,7 @@ namespace MyMvcShopDb.Controllers
             _photoService = photoService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var productsList = _context.Products
@@ -38,6 +41,7 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Products/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

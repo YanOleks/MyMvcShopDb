@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyMvcShopDb.Core.Interfaces;
 using MyMvcShopDb.Helpers;
@@ -22,6 +23,14 @@ namespace MyMvcShopDb
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("Cloudinary"));
             builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddAuthentication()
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -40,6 +49,7 @@ namespace MyMvcShopDb
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -48,6 +58,7 @@ namespace MyMvcShopDb
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+            app.MapRazorPages();
             app.Run();
         }
     }

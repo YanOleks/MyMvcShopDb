@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.Core.Models;
+using MyMvcShopDb.Infrastructure.Data;
 using MyMvcShopDb.ViewModels;
 
 namespace MyMvcShopDb.Controllers
 {
+    [Authorize]
     public class ManufacturersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,12 +18,14 @@ namespace MyMvcShopDb.Controllers
         }
 
         // GET: Manufacturers
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Manufacturers.ToListAsync());
         }
 
         // GET: Manufacturers/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

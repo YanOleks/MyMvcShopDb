@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="MyMvcShopDb.Core/MyMvcShopDb.Core.csproj" Id="a850ccf4-cad3-4d03-9fb5-f70b618ba5e2" />
   <Project Path="MyMvcShopDb.Infrastructure/MyMvcShopDb.Infrastructure.csproj" Id="8ade7cdb-da6f-4e19-9a8e-e8bccbacb8e6" />
+  <Project Path="MyMvcShopDb.Web.Tests/MyMvcShopDb.Web.Tests.csproj" Id="9fcdde2a-8515-4117-9a0a-2388b4312d9b" />
   <Project Path="MyMvcShopDb/MyMvcShopDb.csproj" />
 </Solution>
